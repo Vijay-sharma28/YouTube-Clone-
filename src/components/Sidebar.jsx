@@ -4,7 +4,7 @@ import SidebarText from './SidebarText'
 
 const Sidebar = ({ sidebar,category,setCategory}) => {
   return (
-    <div className={`border border-t-0 ${sidebar ? 'w-[15%]' : 'w-[6%]'} h-[89.9vh] p-3 fixed`}>
+    <div className={`border border-t-0 hidden md:block md:${sidebar ? 'w-[15%] border-r-0' : 'w-[6%]'} h-[89.9vh] p-3 fixed `}>
 
       <div onClick={()=>setCategory(0)} className={` ${sidebar ? "w-full" : "w-15"} px-4 py-2 flex gap-5 hover:bg-gray-200 rounded hover:cursor-pointer`}>
         <FaHouse className={`text-2xl ${category===0?'border-b-2 pb-1 border-b-red-600':''}`} /> <SidebarText title="Home" sidebar={sidebar} />

@@ -1,95 +1,121 @@
-import React from 'react'
-import vdo from '../assets/vdo.mp4'
+import React, { useEffect, useState } from 'react'
 import { FaDownload, FaRegBookmark, FaRegThumbsDown, FaRegThumbsUp, FaShare } from 'react-icons/fa'
 import { FaEllipsis } from 'react-icons/fa6'
-import profile from '../assets/vijay.jpg'
+import axios from 'axios'
+import moment from 'moment'
+import { useParams } from 'react-router-dom'
 
-const PlayVideoCard = () => {
+const PlayVideoCard = ({apiKey,converter}) => {
+
+    const {videoId} = useParams()
+
+    const [data, setData] = useState()
+    const [more,setMore] = useState(true)
+    const [channelData,setChannelData] = useState(undefined)
+    const [commentsData,setCommentsData] = useState([])
+    
+    
+
+    const fetchVideoData = async () => {
+        try {
+            const response = await axios.get(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${apiKey}`)
+            setData(response.data.items[0])
+        } catch (error) {
+            console.log('Error...', error);
+        }
+    }
+    useEffect(() => {
+        fetchVideoData()
+    },[videoId])
+
+
+    const fetchChannelData = async () => {
+        try {
+            const response = await axios.get(`https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=${data.snippet.channelId}&key=${apiKey}`)
+            setChannelData(response.data.items[0])
+        } catch (error) {
+            console.log('Error...', error);
+        }
+    }
+    
+    useEffect(() => {
+        fetchChannelData()
+    },[data])
+    
+    const fetchCommentsData = async () => {
+        try {
+            const response = await axios.get(`https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${videoId}&key=${apiKey}&maxResults=15`)
+            setCommentsData(response.data.items)
+        } catch (error) {
+            console.log('Error...', error);
+        }
+    }
+    useEffect(() => {
+        fetchCommentsData()
+    },[data])
+
+
+     if (!data || !channelData) { return <div className="w-[65%] p-4">Loading...</div> }
+
+
+    // if (!data) return <div className="w-[65%] p-4">Loading...</div>
+
     return (
-        <div className='border w-[65%] p-4 pb-10'>
+        <div className='border lg:w-[65%] p-4 '>
 
-            <video src={vdo} controls autoPlay loop className='aspect-video rounded-xl'></video>
-            {/* <iframe className='aspect-video' src="https://www.youtube.com/embed/Zb1zVeXLUf8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> */}
+            <iframe className='aspect-video' src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
 
-            <h1 className='font-bold p-2'>Lorem ipsum dolor sit amet consectetur adipisicing elit. At, consectetur enim nostrum ipsa voluptates expedita cupiditate omnis aliquid pariatur voluptas?</h1>
 
-            <div className='flex justify-between '>
+            <h1 className='font-bold p-2'>{data ? data.snippet.title : "Title Not Found"}</h1>
+
+            <div className='lg:flex justify-between '>
                 <div className='flex items-center gap-5'>
                     <div className='flex gap-1'>
-                        <img src={profile} alt="" className='w-10 h-10 rounded-full hover:cursor-pointer' />
+                        <img src={channelData?channelData.snippet.thumbnails.high.url || channelData.snippet.thumbnails.medium.url || channelData.snippet.thumbnails.default.url :""} alt="" className='w-10 h-10 rounded-full hover:cursor-pointer' />
                         <div>
-                            <h2 className='font-semibold px-2 hover:cursor-pointer'>Channel Name</h2>
-                            <h3 className='text-gray-600 text-xs px-2 hover:cursor-pointer'>subscribers</h3>
+                            <h2 className='font-semibold px-2 hover:cursor-pointer'>{data.snippet.channelTitle}</h2>
+                            <h3 className='text-gray-600 text-xs px-2 hover:cursor-pointer'>{channelData?converter(channelData.statistics.subscriberCount):"00"} subscribers</h3>
                         </div>
                     </div>
                     <button className='bg-black text-white px-3 py-1.5 rounded-3xl hover:cursor-pointer'>Subscribe</button>
                 </div>
-                <div className='flex gap-3'>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-3 rounded-3xl'><FaRegThumbsUp className='text-xl' />53K<FaRegThumbsDown className='text-xl' /></button>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-3 rounded-3xl'><FaShare className='text-xl' />Share</button>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-3 rounded-3xl'><FaRegBookmark className='text-xl' />Save</button>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-3 rounded-3xl'><FaDownload className='text-xl' />Download</button>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-3 rounded-3xl'><FaEllipsis className='text-xl' /></button>
+                <div className='flex mt-3 gap-1 lg:gap-3'>
+                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaRegThumbsUp className='text:md lg:text-xl' />{converter(data.statistics.likeCount)}<FaRegThumbsDown className='text:md lg:text-xl' /></button>
+                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaShare className='text:md lg:text-xl' />Share</button>
+                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaRegBookmark className='text:md lg:text-xl' />Save</button>
+                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaDownload className='text:md lg:text-xl' />Download</button>
+                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaEllipsis className='text:md lg:text-xl' /></button>
                 </div>
             </div>
 
             {/* Description */}
-            <div className='mt-3 p-3 rounded-2xl bg-gray-200 hover:bg-blue-100 transition-all'>
-                <p className='font-semibold'>76K views 4 weeks ago</p>
-                <p>Description - Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos aut magni voluptatum, quae quos repellendus, sed voluptas fugiat temporibus dicta reprehenderit non? Veniam distinctio tempora enim inventore voluptates praesentium fugiat.</p>
-                <p className='font-semibold hover:cursor-pointer'>...more</p>
+            <div className={`z-0 mt-3 p-3 rounded-2xl bg-gray-200 hover:bg-blue-100 transition-all relative ${more?'h-45 overflow-hidden':''}`}>
+                <p className='font-semibold'>{converter(data.statistics.viewCount)} views &bull; {moment(data.snippet.publishedAt).fromNow()}</p>
+                <p className='mb-3'>{data.snippet.description}</p>
+                <p className='font-semibold hover:cursor-pointer absolute bottom-0 bg-gray-200 w-full hover:bg-blue-100' onClick={()=> setMore(prev => !prev)}>{more?"...more":"...less"}</p>
             </div>
 
             {/* Comments  */}
+
             <div className='p-3 mt-3'>
-                <h2 className='font-semibold text-xl'>130 Comments</h2>
+                <h2 className='font-semibold text-xl'>{converter(data.statistics.commentCount)} Comments</h2>
+                {commentsData.map((items,index)=>(
                 
-                <div className='flex gap-3 p-2 mt-2'>
-                    <img src={profile} alt="" className='w-8 h-8 rounded-full hover:cursor-pointer' />
-                    <div>
-                        <p className='hover:cursor-pointer'>@vijay</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi sint quo, et delectus quod sit Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus dolor autem odio possimus accusantium vel accusamus deserunt quo sapiente quam. .</p>
-                        <p className='flex gap-3 items-center mt-2'><FaRegThumbsUp/> 37 <FaRegThumbsDown/> Reply</p>
+                    <div key={index}>
+                        <div className='flex gap-3 p-2 mt-2'>
+                            <img src={items.snippet.topLevelComment.snippet.authorProfileImageUrl} alt="" className='w-8 h-8 rounded-full hover:cursor-pointer' />
+                            <div>
+                                <p className='hover:cursor-pointer'>{items.snippet.topLevelComment.snippet.authorDisplayName}</p>
+                                <p>{items.snippet.topLevelComment.snippet.textOriginal}</p>
+                                <p className='flex gap-3 items-center mt-2'><FaRegThumbsUp /> {converter(items.snippet.topLevelComment.snippet.likeCount)} <FaRegThumbsDown /> Reply</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='flex gap-3 p-2 mt-2'>
-                    <img src={profile} alt="" className='w-8 h-8 rounded-full hover:cursor-pointer' />
-                    <div>
-                        <p className='hover:cursor-pointer'>@vijay</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi sint quo, et delectus quod sit.</p>
-                        <p className='flex gap-3 items-center mt-2'><FaRegThumbsUp/> 37 <FaRegThumbsDown/> Reply</p>
-                    </div>
-                </div>
-
-                <div className='flex gap-3 p-2 mt-2'>
-                    <img src={profile} alt="" className='w-8 h-8 rounded-full hover:cursor-pointer' />
-                    <div>
-                        <p className='hover:cursor-pointer'>@vijay</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi sint quo, et delectus quod sit.</p>
-                        <p className='flex gap-3 items-center mt-2'><FaRegThumbsUp/> 37 <FaRegThumbsDown/> Reply</p>
-                    </div>
-                </div>
-
-                <div className='flex gap-3 p-2 mt-2'>
-                    <img src={profile} alt="" className='w-8 h-8 rounded-full hover:cursor-pointer' />
-                    <div>
-                        <p className='hover:cursor-pointer'>@vijay</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi sint quo, et delectus quod sit.</p>
-                        <p className='flex gap-3 items-center mt-2'><FaRegThumbsUp/> 37 <FaRegThumbsDown/> Reply</p>
-                    </div>
-                </div>
-
-                <div className='flex gap-3 p-2 mt-2'>
-                    <img src={profile} alt="" className='w-8 h-8 rounded-full hover:cursor-pointer' />
-                    <div>
-                        <p className='hover:cursor-pointer'>@vijay</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi sint quo, et delectus quod sit.</p>
-                        <p className='flex gap-3 items-center mt-2'><FaRegThumbsUp/> 37 <FaRegThumbsDown/> Reply</p>
-                    </div>
-                </div>
-
+                ))}
             </div>
+
+            
 
         </div>
     )

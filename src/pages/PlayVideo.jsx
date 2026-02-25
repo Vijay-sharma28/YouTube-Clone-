@@ -1,12 +1,16 @@
 import React from 'react'
 import PlayVideoCard from '../components/PlayVideoCard'
 import VideoSidebar from '../components/VideoSidebar'
+import { useParams } from 'react-router-dom'
 
-const PlayVideo = () => {
+const PlayVideo = ({apiKey,converter}) => {
+
+  const {videoId,categoryId} = useParams() 
+
   return (
-    <div className='flex mt-18'>
-      <PlayVideoCard />
-      <VideoSidebar />
+    <div className='lg:flex mt-18'>
+      <PlayVideoCard videoId={videoId} apiKey={apiKey} converter={converter} />
+      <VideoSidebar categoryId={categoryId} apiKey={apiKey} converter={converter} />
     </div>
   )
 }
