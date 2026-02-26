@@ -15,17 +15,17 @@ const Navbar = ({setSidebar}) => {
             </div>
 
             {/* Middle Nav  */}
-            <div className='p-2 sm:flex gap-2 lg:gap-3 items-center hidden sm:block'> 
-                <div className="input relative border-amber-400">
-                    <input type="text" placeholder='Search' className='border lg:h-9 lg:w-90 text-xs p-2 lg:px-3 lg:py-1 rounded-3xl' />
-                    <FaSearch className='absolute top-0 lg:top-0 right-0 lg:text-xl border-l w-10 h-8 lg:h-9 p-1.5' />
+            <div className='p-2 w-full lg:w-fit justify-center sm:flex gap-2 lg:gap-3 items-center hidden '> 
+                <div className="input w-1/2 lg:w-full relative border-amber-400">
+                    <input type="text" placeholder='Search' className='border w-full lg:h-9 lg:w-90 text-xs p-2 lg:px-3 lg:py-1 rounded-3xl' />
+                    <FaSearch className='absolute top-0 lg:top-0 right-0 lg:text-xl border-l w-15 h-8 lg:h-9 p-2 hover:cursor-pointer' />
                 </div>
-                <FaMicrophone className='border h-8 w-8 p-1.5 rounded-3xl'/>
+                <FaMicrophone className='border h-9 w-11 p-2 rounded-full'/>
             </div>
 
             {/* Right Nav  */}
             <div className='flex items-center gap-2 lg:gap-6'> 
-                <FaBell className=' h-10 w-10 p-2 rounded-3xl' />
+                <FaBell className=' h-10 w-15 p-2 rounded-3xl' />
                 <img src={logo} className='object-cover h-8 w-8 lg:h-10 lg:w-10 rounded-full' alt="" />
             </div>
 

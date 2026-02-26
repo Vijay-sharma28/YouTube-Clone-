@@ -37,7 +37,7 @@ const VideoSidebar = ({apiKey,categoryId,converter}) => {
                 <Link to={`/PlayVideo/${items.snippet.categoryId}/${items.id}`} key={index} className='p-3 flex gap-2 hover:cursor-pointer hover:bg-blue-50 rounded-xl'>
                     <img src={items.snippet.thumbnails.standard.url || items.snippet.thumbnails.high.url || items.snippet.thumbnails.default.url} alt="" className='w-[50%] object-cover aspect-video rounded-xl' />
                     <div className='flex flex-col gap-1'>
-                        <p className='font-semibold'>{items.snippet.title}</p>
+                        <p className='font-semibold break-all'>{items.snippet.title}</p>
                         <p className='text-gray-500 text-xs'>{items.snippet.channelTitle}</p>
                         <p className='text-gray-500 text-xs'>{converter(items.statistics.viewCount)} views &bull; {moment(items.snippet.publishedAt).fromNow()} </p>
                     </div>

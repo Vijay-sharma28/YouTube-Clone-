@@ -58,10 +58,8 @@ const PlayVideoCard = ({apiKey,converter}) => {
      if (!data || !channelData) { return <div className="w-[65%] p-4">Loading...</div> }
 
 
-    // if (!data) return <div className="w-[65%] p-4">Loading...</div>
-
     return (
-        <div className='border lg:w-[65%] p-4 '>
+        <div className='border xl:w-[65%] p-2'>
 
             <iframe className='aspect-video' src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
 
@@ -79,32 +77,33 @@ const PlayVideoCard = ({apiKey,converter}) => {
                     </div>
                     <button className='bg-black text-white px-3 py-1.5 rounded-3xl hover:cursor-pointer'>Subscribe</button>
                 </div>
+
                 <div className='flex mt-3 gap-1 lg:gap-3'>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaRegThumbsUp className='text:md lg:text-xl' />{converter(data.statistics.likeCount)}<FaRegThumbsDown className='text:md lg:text-xl' /></button>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaShare className='text:md lg:text-xl' />Share</button>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaRegBookmark className='text:md lg:text-xl' />Save</button>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaDownload className='text:md lg:text-xl' />Download</button>
-                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaEllipsis className='text:md lg:text-xl' /></button>
+                    <button className='border hover:cursor-pointer px-3 py-1 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaRegThumbsUp className='text-sm lg:text-xl' /><span className='text-sm'>{converter(data.statistics.likeCount)}</span><FaRegThumbsDown className='text-sm lg:text-xl' /></button>
+                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaShare className='text-sm lg:text-xl' />Share</button>
+                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaRegBookmark className='text-sm lg:text-xl' />Save</button>
+                    <button className='hidden border hover:cursor-pointer px-3 py-1.5 lg:flex items-center gap-2 lg:gap-3 rounded-3xl'><FaDownload className='text-sm lg:text-xl' />Download</button>
+                    <button className='border hover:cursor-pointer px-3 py-1.5 flex items-center gap-2 lg:gap-3 rounded-3xl'><FaEllipsis className='text-sm lg:text-xl' /></button>
                 </div>
             </div>
 
             {/* Description */}
-            <div className={`z-0 mt-3 p-3 rounded-2xl bg-gray-200 hover:bg-blue-100 transition-all relative ${more?'h-45 overflow-hidden':''}`}>
+            <div className={`z-0 mt-3 p-3 rounded-2xl bg-gray-200 hover:bg-blue-100 transition-all relative ${more?'max-h-45 overflow-hidden':''}`}>
                 <p className='font-semibold'>{converter(data.statistics.viewCount)} views &bull; {moment(data.snippet.publishedAt).fromNow()}</p>
                 <p className='mb-3'>{data.snippet.description}</p>
-                <p className='font-semibold hover:cursor-pointer absolute bottom-0 bg-gray-200 w-full hover:bg-blue-100' onClick={()=> setMore(prev => !prev)}>{more?"...more":"...less"}</p>
+                <p className={`font-semibold hover:cursor-pointer absolute bottom-0 bg-gray-200 hover:bg-blue-100 ${more?'w-full':''}`} onClick={()=> setMore(prev => !prev)}>{more?"...more":"...less"}</p>
             </div>
 
             {/* Comments  */}
 
-            <div className='p-3 mt-3'>
+            <div className='xl:p-3 mt-3'>
                 <h2 className='font-semibold text-xl'>{converter(data.statistics.commentCount)} Comments</h2>
                 {commentsData.map((items,index)=>(
                 
                     <div key={index}>
-                        <div className='flex gap-3 p-2 mt-2'>
+                        <div className='flex gap-2 p-2 mt-2'>
                             <img src={items.snippet.topLevelComment.snippet.authorProfileImageUrl} alt="" className='w-8 h-8 rounded-full hover:cursor-pointer' />
-                            <div>
+                            <div className='text-sm'>
                                 <p className='hover:cursor-pointer'>{items.snippet.topLevelComment.snippet.authorDisplayName}</p>
                                 <p>{items.snippet.topLevelComment.snippet.textOriginal}</p>
                                 <p className='flex gap-3 items-center mt-2'><FaRegThumbsUp /> {converter(items.snippet.topLevelComment.snippet.likeCount)} <FaRegThumbsDown /> Reply</p>

@@ -8,7 +8,7 @@ const PlayVideo = ({apiKey,converter}) => {
   const {videoId,categoryId} = useParams() 
 
   return (
-    <div className='lg:flex mt-18'>
+    <div className='xl:flex mt-18'>
       <PlayVideoCard videoId={videoId} apiKey={apiKey} converter={converter} />
       <VideoSidebar categoryId={categoryId} apiKey={apiKey} converter={converter} />
     </div>

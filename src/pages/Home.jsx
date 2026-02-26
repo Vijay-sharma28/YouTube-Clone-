@@ -10,8 +10,8 @@ const Home = ({sidebar,category,setCategory,videos,converter}) => {
     <div>
       
       <div className='lg:flex mt-18'>
-        <Sidebar sidebar={sidebar} category={category} setCategory={setCategory} />
-        <Videos sidebar={sidebar} videos={videos} converter={converter} category={category} />
+        <Sidebar sidebar={sidebar} />
+        <Videos sidebar={sidebar} videos={videos} converter={converter} category={category} setCategory={setCategory} />
       </div>
     </div>
   )
