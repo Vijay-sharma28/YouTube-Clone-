@@ -5,7 +5,7 @@ import { FaBars, FaClock, FaDownload, FaHistory, FaThumbsUp, FaYoutube } from 'r
 
 const Sidebar = ({ sidebar}) => {
   return (
-    <div className={`border-r-2 hidden lg:block md:${sidebar ? 'w-[15%]' : 'w-[6%]'} h-screen p-3 fixed `}>
+    <div className={`border-r-2 hidden lg:block md:${sidebar ? 'w-[15%]' : 'w-[6%]'} h-screen p-3 fixed`}>
 
       <div onClick={console.log('hello its clicked.....')} className={` ${sidebar ? "w-full" : "w-15"} px-4 py-2 flex gap-5 hover:bg-gray-200 rounded hover:cursor-pointer`}>
         <FaHouse className={`text-2xl`} /> <SidebarText title="Home" sidebar={sidebar} />
