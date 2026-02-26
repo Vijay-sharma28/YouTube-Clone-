@@ -28,7 +28,7 @@ const Category = ({setCategory,sidebar}) => {
     ];
 
     return (
-        <div className={`max-w-full lg:w-320 bg-white flex gap-3 list-none px-3 lg:px-0 py-3 top-15 sm:top-20 lg:${sidebar?'left-55':'left-40'} h-fit fixed overflow-auto scroll-none`}>
+        <div className={`w-full  bg-white flex gap-3 list-none px-3 lg:px-0 py-3 top-15 sm:top-20 lg:${sidebar?'left-55':'left-40'} h-fit fixed overflow-auto scroll-none`}>
 
             <CategoryText categories={categories} setCategory={setCategory} sidebar={sidebar} />
 
